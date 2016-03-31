@@ -1,0 +1,162 @@
+<html>
+  <head>
+    <title>Collision Explainer</title>
+    <style>
+      .box {
+        background: red;
+        width: 0%;
+        height: 0%;
+        position: absolute;
+        left: 0px;
+      }
+
+      #main {
+        width: 500px;
+        height: 500px;
+        background: #DDD;
+        position: relative;
+      }
+
+      .left {
+        float: left;
+      }
+
+      .axis.x{
+        width: 100%;
+        border-top: 2px solid black;
+      }
+      .axis.y{
+        height: 500px;
+        width: 10;
+        border-right: 2px solid black;
+      }
+      .tick {
+        position: relative;
+        background: black;
+      }
+
+      .tick.x{
+        width: 2px;
+        height: 10px;
+        float: left;
+      }
+
+      .tick.y{
+        width: 10px;
+        height: 2px;
+      }
+
+      #control{
+          padding-left: 10px;
+      }
+
+      .y .num{
+        left: -1.6em;
+        top: -0.5em;
+        text-align: right;
+        width: 1.5em;
+        display: block;
+      }
+
+      .num {
+        position: relative;
+        top: 10px;
+        left: -3px;
+      }
+
+      .main-wrap{
+        margin-left: 20px;
+      }
+
+      input {
+        border: none;
+        border-bottom: 1px solid black;
+        width: 2em;
+        text-align: center;
+      }
+
+      #andor{
+        width: 8em;
+        text-align: center;
+        margin: 1em 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-wrap">
+      <div id="y-axis" class="axis y left"></div>
+      <div class="left">
+        <div id="main">
+          <div id="box" class="box"></div>
+          <div id="box-y" class="box"></div>
+        </div>
+        <div id="x-axis" class="axis x"></div>
+      </div>
+    <div>
+    <div id="control" class="left">
+      <div>
+        <input id="x-greater" type="text">
+        <span> < x < </span>
+        <input id="x-less" input type="text">
+      </div>
+      <select id="andor">
+        <option value="and">and</option>
+        <option value="or">or</option>
+      </select>
+      <div>
+        <input id="y-greater" type="text">
+        <span> < y < </span>
+        <input id="y-less" input type="text">
+      </div>
+    </div>
+    <script type="text/javascript">
+      var $box = document.getElementById('box'),
+        $boxY = document.getElementById('box-y'),
+        $xGreater = document.getElementById('x-greater'),
+        $xLess = document.getElementById('x-less'),
+        $yGreater = document.getElementById('y-greater'),
+        $yLess = document.getElementById('y-less'),
+        $xAxis = document.getElementById('x-axis'),
+        $yAxis = document.getElementById('y-axis'),
+        $andor = document.getElementById('andor');
+
+      function updateBox(box, greater, less, gcss, lcss){
+        box.style[gcss] = greater * 5 + 'px';
+        box.style[lcss] = (less - greater) + '%';
+      }
+
+      function update(){
+        if($andor.value === 'and'){
+          updateBox($box, $yGreater.value || 0, $yLess.value || 100, 'top', 'height');
+          updateBox($box, $xGreater.value || 0, $xLess.value || 100, 'left', 'width');
+          updateBox($boxY, 0, 0, 'top', 'height');
+        } else {
+          updateBox($box, 0, 100, 'top', 'height');
+          updateBox($box, $xGreater.value || 0, $xLess.value || 100, 'left', 'width');
+          updateBox($boxY, $yGreater.value || 0, $yLess.value || 100, 'top', 'height');
+          updateBox($boxY, 0, 100, 'left', 'width');
+        }
+
+      }
+
+      function createTick(i, axis, css, offset){
+        var $tick = document.createElement('div');
+        $tick.className = 'tick ' + axis;
+        $tick.style[css] = i * 5 - Math.floor(i / 10) * 2 + offset;
+        $tick.innerHTML = '<span class="num">' + (axis === 'y' ? 100 - i : i) + '</span>';
+        return $tick;
+      }
+
+      for(var i = 0; i <= 100; i++){
+        if(i % 10 === 0){
+          $xAxis.appendChild(createTick(i, 'x', 'left', -2));
+          $yAxis.appendChild(createTick(i, 'y', 'top', 0));
+        }
+      }
+
+      $yLess.onchange = $yGreater.onchange = update;
+      $xLess.onchange = $xGreater.onchange = update;
+      $andor.onchange = update;
+    </script>
+  </body>
+</html>
