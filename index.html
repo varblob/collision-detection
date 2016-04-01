@@ -23,7 +23,8 @@
 
       .axis.x{
         width: 100%;
-        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        
       }
       .axis.y{
         height: 500px;
@@ -39,6 +40,7 @@
         width: 2px;
         height: 10px;
         float: left;
+        top: -10px;
       }
 
       .tick.y{
@@ -58,6 +60,10 @@
         display: block;
       }
 
+      .x .num{
+        top: -1em;
+      }
+
       .num {
         position: relative;
         top: 10px;
@@ -65,7 +71,7 @@
       }
 
       .main-wrap{
-        margin-left: 20px;
+        margin: 4em;
       }
 
       input {
@@ -86,11 +92,11 @@
     <div class="main-wrap">
       <div id="y-axis" class="axis y left"></div>
       <div class="left">
+        <div id="x-axis" class="axis x"></div>
         <div id="main">
           <div id="box" class="box"></div>
           <div id="box-y" class="box"></div>
         </div>
-        <div id="x-axis" class="axis x"></div>
       </div>
     <div>
     <div id="control" class="left">
@@ -144,7 +150,7 @@
           var $tick = document.createElement('div');
           $tick.className = 'tick ' + axis;
           $tick.style[css] = i * 5 - Math.floor(i / 10) * 2 + offset;
-          $tick.innerHTML = '<span class="num">' + (axis === 'y' ? 100 - i : i) + '</span>';
+          $tick.innerHTML = '<span class="num">' + i + '</span>';
           return $tick;
         }
 
